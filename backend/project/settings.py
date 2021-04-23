@@ -10,7 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
+import sys
 from pathlib import Path
+from decouple import config
+from datetime import timedelta
+from decouple import config, UndefinedValueError
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +24,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z27ym3dndu!dvth90)qmxft9^%5a23pv6cn)q4zec=i9nins#='
+try:
+    if os.environ['DEBUG'].lower() == 'false':
+        DEBUG = False
+    else:
+        DEBUG = True
+except KeyError:
+    DEBUG = True
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+print(f'DEBUG is now {DEBUG}')
 
-ALLOWED_HOSTS = []
+try:
+    SECRET_KEY = os.environ['SECRET_KEY']
+except KeyError:
+    try:
+        SECRET_KEY = config('SECRET_KEY')
+    except UndefinedValueError:
+        print('ERROR: SECRET_KEY is not defined ! ! !')
+        sys.exit()
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +55,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'rest_framework.authtoken',
+    'rest_framework',
+    'corsheaders',
+    'djoser',
+    # 'drf_yasg',
+
+    'main_app'
 ]
 
 MIDDLEWARE = [
