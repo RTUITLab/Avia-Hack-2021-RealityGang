@@ -26,7 +26,7 @@ services:
     ports:
       - 80:8080
     volumes:
-      - frontend_build_folder:/var/www/frontend
+#      - frontend_build_folder:/var/www/frontend
       - ./backend:/usr/src/avia
     depends_on:
       - backend
