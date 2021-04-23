@@ -1,4 +1,4 @@
-# Avia-Hack-2021-RealityGang
+# Avia-Hack-2021
 ✈️ Core backend service for MAI's "Aviahackathon" hackathon 2021
 
 ## Launching project in production mode
