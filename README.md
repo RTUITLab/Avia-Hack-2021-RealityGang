@@ -38,7 +38,7 @@ services:
 docker-compose up --build
 ```
 
-> Done! Project launched on 8000 port!
+> Done! Project launched on 80 port!
 
 <!---
 
