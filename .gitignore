@@ -2,3 +2,4 @@
 frontend/.env
 backend/.env
 backend/venv
+backend/test_db.sqlite3
