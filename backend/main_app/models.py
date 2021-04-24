@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from datetime import datetime
 
 
 class Message(models.Model):
     description = models.TextField('Описание', max_length=256)
+    created_at = models.DateTimeField('Время публикации', default=datetime.now)
 
     user = models.ForeignKey('User', on_delete=models.SET_NULL, verbose_name='Пользователь',
                              related_name='messages', null=True, blank=True)
