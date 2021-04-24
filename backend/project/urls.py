@@ -32,5 +32,8 @@ urlpatterns = [
 urlpatterns += [
     url(r'^auth/', include('djoser.urls')),
     url(r'^auth/', include('djoser.urls.jwt')),
+
+    # Проверить, авторизирован ли пользователь
+    path('api/is_authenticated', views.IsAuthenticatedView.as_view()),
 ]
 # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
