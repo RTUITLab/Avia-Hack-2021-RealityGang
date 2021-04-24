@@ -9,7 +9,7 @@ AdminSite.site_header = 'Avia-Hack-2021'
 
 
 class CustomMessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'description')
+    list_display = ('id', 'status', 'user', 'description')
 
 
 class CustomUserAdmin(UserAdmin):
