@@ -31,15 +31,14 @@ class GetMessagesView(APIView):
                 return False
 
     def post(self, request):
-        # find_by_letters = request.POST['find_by_letters']
-        find_by_letters = ''
+        find_by_letters = request.data['find_by_letters']
+        # find_by_letters = ''
 
         data = []
         next_page = 1
         previous_page = 1
 
         if self.is_digit(find_by_letters):
-
             messages = Message.objects.filter(
                 Q(user=request.user),
                 Q(pk=find_by_letters) |
