@@ -77,8 +77,8 @@ class GetMessagesView(APIView):
             'messages': serializer.data,
             'count': paginator.count,
             'numpages': paginator.num_pages,
-            'nextlink': '/api/recent_news?page=' + str(next_page),
-            'prevlink': '/api/recent_news?page=' + str(previous_page)
+            'nextlink': '/api/get_messages?page=' + str(next_page),
+            'prevlink': '/api/get_messages?page=' + str(previous_page)
         })
 
 
