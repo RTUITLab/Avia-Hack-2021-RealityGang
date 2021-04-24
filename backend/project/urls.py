@@ -24,8 +24,8 @@ import main_app.views as views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Страница создания/редактирования/удаления новости - Добавить/изменить/удалить новость
-    # path('api/add_or_change_message', views.AddOrChangeMessageView.as_view()),
+    # Получить все заявки выбранного пользователя
+    path('api/get_messages', views.GetMessagesView.as_view()),
 ]
 
 # Авторизация
