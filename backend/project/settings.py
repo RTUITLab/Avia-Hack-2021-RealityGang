@@ -178,7 +178,7 @@ DJOSER = {
     'SET_PASSWORD_RETYPE': False,
 }
 
-# AUTH_USER_MODEL = 'main_app.User'
+AUTH_USER_MODEL = 'main_app.User'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
