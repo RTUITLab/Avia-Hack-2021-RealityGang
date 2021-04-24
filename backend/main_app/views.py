@@ -5,6 +5,23 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from .serializers import *
 from .models import *
+from rest_framework import status
+
+
+class ShowCurrentMessageView(APIView):
+    """
+    Shows current message
+    """
+
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, message_pk):
+        message = Message.objects.get(pk=message_pk)
+        if message.user == request.user:
+            message = MessageSerializer(message, context={'request': request}).data
+            return Response(message)
+        else:
+            return Response(status.HTTP_403_FORBIDDEN)
 
 
 class AddNewMessageView(APIView):
