@@ -29,6 +29,9 @@ urlpatterns = [
 
     # Создать новую заявку
     path('api/new_message', views.AddNewMessageView.as_view()),
+
+    # Получить выбранную заявку
+    path('api/message/<int:message_pk>', views.ShowCurrentMessageView.as_view()),
 ]
 
 # Авторизация
