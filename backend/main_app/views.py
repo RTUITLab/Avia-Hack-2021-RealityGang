@@ -7,6 +7,23 @@ from .serializers import *
 from .models import *
 
 
+class AddNewMessageView(APIView):
+    """
+    Adds new message
+    """
+
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        message = Message.objects.create(
+            user=request.user,
+            description=request.data['description']
+        )
+        message.save()
+        message = MessageSerializer(message, context={'request': request}).data
+        return Response(message)
+
+
 class GetMessagesView(APIView):
     """
     Returns messages of current user
@@ -88,4 +105,3 @@ class IsAuthenticatedView(APIView):
 
     def get(self, request):
         return Response(request.user.is_authenticated)
-
