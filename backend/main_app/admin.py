@@ -8,6 +8,10 @@ AdminSite.site_title = 'Avia-Hack-2021'
 AdminSite.site_header = 'Avia-Hack-2021'
 
 
+class CustomMessageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'description')
+
+
 class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'full_name', 'is_active', 'is_staff', 'is_superuser')
     fieldsets = (
@@ -24,4 +28,4 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Message)
+admin.site.register(Message, CustomMessageAdmin)
