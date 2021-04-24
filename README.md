@@ -1,5 +1,5 @@
 # Avia-Hack-2021
-✈️ Core backend service for MAI's "Aviahackathon" hackathon 2021
+✈️ Service, that can find anomalies in aircraft tracks
 
 ## Launching project in production mode
 #### Git, Docker and Docker Compose must be installed
