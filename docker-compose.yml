@@ -1,17 +1,27 @@
 version: '3.7'
 
 services:
+  ml:
+    build:
+      context: ./ml
+    command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000"
+    expose:
+      - 8000
+#    ports:
+#      - 8003:8000
   backend:
     build:
       context: ./backend
-    command: sh -c "pip install -r requirements.txt && python3 manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8080 project.wsgi"
+    command: sh -c "python3 manage.py collectstatic --noinput && gunicorn --bind 0.0.0.0:8080 project.wsgi"
     expose:
       - 8080
     volumes:
       - ./backend:/usr/src/avia
     environment:
-      - DEBUG=False
+      - DEBUG=True
       - SECRET_KEY=DJANGO_SECRET_KEY
+    external_links:
+      - ml
 #  frontend:
 #    build:
 #      context: ./frontend
@@ -29,6 +39,7 @@ services:
 #      - frontend_build_folder:/var/www/frontend
       - ./backend:/usr/src/avia
     depends_on:
+      - ml
       - backend
 #      - frontend
 #volumes:

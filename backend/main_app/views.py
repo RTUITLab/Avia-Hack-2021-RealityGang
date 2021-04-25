@@ -36,6 +36,7 @@ class AddNewMessageView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
+        print('i got new message')
         files = {
             'file': request.FILES['file']
         }
@@ -47,16 +48,17 @@ class AddNewMessageView(APIView):
         message.save()
 
         # response = requests.post('http://127.0.0.1:8003/predict', data={}, files=files).json()
-        response = requests.post('http://127.0.0.1:8003/predict', json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
+        # response = requests.post('http://127.0.0.1:8003/predict', json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
+        response = requests.post('http://ml/predict', json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
         answers = response['answers']
 
         with open(f'media/answers/answer_{message.pk}.json', 'w') as outfile:
             outfile.write(json.dumps(answers, indent=4))
 
-        with open(f'media/correct/correct_{message.pk}.txt', 'wb') as outfile:
+        with open(f'media/corrects/correct_{message.pk}.txt', 'wb') as outfile:
             outfile.write(base64.b64decode(response['corrects']))
 
-        with open(f'media/incorrect/incorrect_{message.pk}.txt', 'wb') as outfile:
+        with open(f'media/incorrects/incorrect_{message.pk}.txt', 'wb') as outfile:
             outfile.write(base64.b64decode(response['incorrects']))
 
         goodTracksFile = base64.b64decode(response['corrects']).decode('utf-8')
@@ -71,9 +73,10 @@ class AddNewMessageView(APIView):
         message.correct = f'corrects/correct_{message.pk}.txt'
         message.incorrect = f'incorrects/incorrect_{message.pk}.txt'
         message.kml = f'kml/kml_{message.pk}.kml'
+        message.save()
 
         message = MessageSerializer(message, context={'request': request}).data
-
+        print('i sent new message')
         return Response(message)
 
 
