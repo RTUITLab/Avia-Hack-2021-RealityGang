@@ -8,4 +8,4 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 2
         model = Message
-        fields = ('id', 'description', 'created_at', 'answer', 'correct', 'incorrect', 'kml')
+        fields = ('id', 'description', 'created_at', 'answer', 'correct', 'incorrect', 'kml', 'num_correct', 'num_incorrect')
