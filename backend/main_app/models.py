@@ -10,6 +10,7 @@ class Message(models.Model):
     answer = models.FileField('answer', null=True)
     correct = models.FileField('correct', null=True)
     incorrect = models.FileField('incorrect', null=True)
+    kml = models.FileField('kml', null=True)
     # json = models.CharField('JSON', default='', max_length=1000000)
 
     user = models.ForeignKey('User', on_delete=models.SET_NULL, verbose_name='Пользователь',

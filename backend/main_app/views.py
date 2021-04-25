@@ -9,6 +9,7 @@ from rest_framework import status
 import requests
 import base64
 import json
+from .toKML import gen_kml
 
 
 class ShowCurrentMessageView(APIView):
@@ -45,9 +46,9 @@ class AddNewMessageView(APIView):
         )
         message.save()
 
-        response = requests.post('http://127.0.0.1:8000/api/predict', data={}, files=files).json()
+        # response = requests.post('http://127.0.0.1:8003/predict', data={}, files=files).json()
+        response = requests.post('http://127.0.0.1:8003/predict', json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
         answers = response['answers']
-        print(type(answers))
 
         with open(f'media/answers/answer_{message.pk}.json', 'w') as outfile:
             outfile.write(json.dumps(answers, indent=4))
@@ -58,9 +59,18 @@ class AddNewMessageView(APIView):
         with open(f'media/incorrect/incorrect_{message.pk}.txt', 'wb') as outfile:
             outfile.write(base64.b64decode(response['incorrects']))
 
+        goodTracksFile = base64.b64decode(response['corrects']).decode('utf-8')
+        badTracksFile = base64.b64decode(response['incorrects']).decode('utf-8')
+
+        # print(gen_kml(goodTracksFile, badTracksFile))
+
+        with open(f'media/kml/kml_{message.pk}.kml', 'w') as outfile:
+            outfile.write(gen_kml(badTracksFile, goodTracksFile))
+
         message.answer = f'answers/answer_{message.pk}.json'
         message.correct = f'corrects/correct_{message.pk}.txt'
         message.incorrect = f'incorrects/incorrect_{message.pk}.txt'
+        message.kml = f'kml/kml_{message.pk}.kml'
 
         message = MessageSerializer(message, context={'request': request}).data
 
