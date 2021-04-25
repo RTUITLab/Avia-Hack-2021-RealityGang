@@ -52,7 +52,7 @@ class TestView(APIView):
         )
         message.save()
 
-        response = requests.post('http://ml:8000/predict', timeout=10,
+        response = requests.post('http://ml:8000/predict', timeout=10000,
                                  json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
         answers = response['answers']
         answers = self.pretty_json(answers)
