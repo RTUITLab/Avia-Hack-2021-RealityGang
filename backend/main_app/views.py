@@ -28,6 +28,49 @@ class ShowCurrentMessageView(APIView):
             return Response(status.HTTP_403_FORBIDDEN)
 
 
+class TestView(APIView):
+    """
+    Test
+    """
+
+    def post(self, request):
+        print('start')
+        message = Message.objects.create(
+            user=request.user,
+            description=request.data['description'],
+        )
+        message.save()
+
+        response = requests.post('http://ml:8000/predict',
+                                 json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
+        answers = response['answers']
+
+        with open(f'media/answers/answer_{message.pk}.json', 'w') as outfile:
+            outfile.write(json.dumps(answers, indent=4))
+
+        with open(f'media/corrects/correct_{message.pk}.txt', 'wb') as outfile:
+            outfile.write(base64.b64decode(response['corrects']))
+
+        with open(f'media/incorrects/incorrect_{message.pk}.txt', 'wb') as outfile:
+            outfile.write(base64.b64decode(response['incorrects']))
+
+        goodTracksFile = base64.b64decode(response['corrects']).decode('utf-8')
+        badTracksFile = base64.b64decode(response['incorrects']).decode('utf-8')
+
+        with open(f'media/kml/kml_{message.pk}.kml', 'w') as outfile:
+            outfile.write(gen_kml(badTracksFile, goodTracksFile))
+
+        message.answer = f'answers/answer_{message.pk}.json'
+        message.correct = f'corrects/correct_{message.pk}.txt'
+        message.incorrect = f'incorrects/incorrect_{message.pk}.txt'
+        message.kml = f'kml/kml_{message.pk}.kml'
+        message.save()
+
+        message = MessageSerializer(message, context={'request': request}).data
+        print('done')
+        return Response(message)
+
+
 class AddNewMessageView(APIView):
     """
     Adds new message
@@ -49,7 +92,8 @@ class AddNewMessageView(APIView):
 
         # response = requests.post('http://127.0.0.1:8003/predict', data={}, files=files).json()
         # response = requests.post('http://127.0.0.1:8003/predict', json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
-        response = requests.post('http://ml/predict', json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
+        response = requests.post('http://ml/predict',
+                                 json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
         answers = response['answers']
 
         with open(f'media/answers/answer_{message.pk}.json', 'w') as outfile:

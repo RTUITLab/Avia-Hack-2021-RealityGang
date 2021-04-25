@@ -20,27 +20,27 @@ services:
     environment:
       - DEBUG=True
       - SECRET_KEY=DJANGO_SECRET_KEY
-    external_links:
-      - ml
-#  frontend:
-#    build:
-#      context: ./frontend
-#    command: npm run-script build
-#    volumes:
-#      - frontend_build_folder:/frontend/build
-#    environment:
-#      - REACT_APP_PRODUCTION_URL=http://127.0.0.1:8001/
+#    external_links:
+#      - ml
+  frontend:
+    build:
+      context: ./frontend
+    command: npm run-script build
+    volumes:
+      - frontend_build_folder:/frontend/build
+    environment:
+      - REACT_APP_PRODUCTION_URL=http://127.0.0.1/
   nginx:
     build:
       context: ./nginx
     ports:
       - 80:8080
     volumes:
-#      - frontend_build_folder:/var/www/frontend
+      - frontend_build_folder:/var/www/frontend
       - ./backend:/usr/src/avia
     depends_on:
       - ml
       - backend
-#      - frontend
-#volumes:
-#  frontend_build_folder:
+      - frontend
+volumes:
+  frontend_build_folder:
