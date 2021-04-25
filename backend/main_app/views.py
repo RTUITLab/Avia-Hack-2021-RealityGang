@@ -178,7 +178,7 @@ class GetMessagesView(APIView):
                 Q(description__icontains=find_by_letters.capitalize()) |
                 Q(description__icontains=find_by_letters.lower()) |
                 Q(description__icontains=find_by_letters.upper())
-            )
+            ).order_by('-created_at')
         else:
             messages = Message.objects.filter(
                 Q(user=request.user),
@@ -186,7 +186,7 @@ class GetMessagesView(APIView):
                 Q(description__icontains=find_by_letters.capitalize()) |
                 Q(description__icontains=find_by_letters.lower()) |
                 Q(description__icontains=find_by_letters.upper())
-            )
+            ).order_by('-created_at')
 
         page = request.GET.get('page', 1)
         paginator = Paginator(messages, 3)
