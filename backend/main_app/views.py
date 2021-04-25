@@ -76,14 +76,13 @@ class TestView(APIView):
         message.correct = f'corrects/correct_{message.pk}.txt'
         message.incorrect = f'incorrects/incorrect_{message.pk}.txt'
         message.kml = f'kml/kml_{message.pk}.kml'
+        message.num_correct = answers['correct']
+        message.num_incorrect = answers['incorrect']
         message.save()
 
         message = MessageSerializer(message, context={'request': request}).data
         print('done')
-        return Response({
-            'quantity': self.quantity_from_json(answers),
-            'message': message
-        })
+        return Response(message)
 
 
 class AddNewMessageView(APIView):

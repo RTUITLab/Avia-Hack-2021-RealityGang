@@ -11,6 +11,9 @@ class Message(models.Model):
     correct = models.FileField('correct', null=True)
     incorrect = models.FileField('incorrect', null=True)
     kml = models.FileField('kml', null=True)
+
+    num_correct = models.IntegerField('num cor', null=True, default=0)
+    num_incorrect = models.IntegerField('num incor', null=True, default=0)
     # json = models.CharField('JSON', default='', max_length=1000000)
 
     user = models.ForeignKey('User', on_delete=models.SET_NULL, verbose_name='Пользователь',
