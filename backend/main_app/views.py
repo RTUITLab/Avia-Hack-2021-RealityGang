@@ -33,6 +33,17 @@ class TestView(APIView):
     Test
     """
 
+    def quantity_from_json(self, answers: dict) -> dict:
+        quantity = {}
+        quantity['correct'] = sum(map(('correct').__eq__, answers.values()))
+        quantity['incorrect'] = len(answers.values()) - quantity['correct']
+        return quantity
+
+    def pretty_json(self, answers: dict) -> dict:
+        for key, val in answers.items():
+            answers[key] = 'correct' if val == 0 else 'incorrect'
+        return answers
+
     def post(self, request):
         print('start')
         message = Message.objects.create(
@@ -44,6 +55,7 @@ class TestView(APIView):
         response = requests.post('http://ml:8000/predict',
                                  json={"file": base64.b64encode(request.FILES['file'].read()).decode('UTF-8')}).json()
         answers = response['answers']
+        answers = self.pretty_json(answers)
 
         with open(f'media/answers/answer_{message.pk}.json', 'w') as outfile:
             outfile.write(json.dumps(answers, indent=4))
@@ -68,7 +80,10 @@ class TestView(APIView):
 
         message = MessageSerializer(message, context={'request': request}).data
         print('done')
-        return Response(message)
+        return Response({
+            'quantity': self.quantity_from_json(answers),
+            'message': message
+        })
 
 
 class AddNewMessageView(APIView):
