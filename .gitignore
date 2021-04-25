@@ -2,4 +2,5 @@
 frontend/.env
 backend/.env
 backend/venv
+backend/static_django
 backend/test_db.sqlite3

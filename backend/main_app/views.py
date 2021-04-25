@@ -6,6 +6,9 @@ from django.db.models import Q
 from .serializers import *
 from .models import *
 from rest_framework import status
+import requests
+import base64
+import json
 
 
 class ShowCurrentMessageView(APIView):
@@ -32,12 +35,35 @@ class AddNewMessageView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request):
+        files = {
+            'file': request.FILES['file']
+        }
+
         message = Message.objects.create(
             user=request.user,
-            description=request.data['description']
+            description=request.data['description'],
         )
         message.save()
+
+        response = requests.post('http://127.0.0.1:8000/api/predict', data={}, files=files).json()
+        answers = response['answers']
+        print(type(answers))
+
+        with open(f'media/answers/answer_{message.pk}.json', 'w') as outfile:
+            outfile.write(json.dumps(answers, indent=4))
+
+        with open(f'media/correct/correct_{message.pk}.txt', 'wb') as outfile:
+            outfile.write(base64.b64decode(response['corrects']))
+
+        with open(f'media/incorrect/incorrect_{message.pk}.txt', 'wb') as outfile:
+            outfile.write(base64.b64decode(response['incorrects']))
+
+        message.answer = f'answers/answer_{message.pk}.json'
+        message.correct = f'corrects/correct_{message.pk}.txt'
+        message.incorrect = f'incorrects/incorrect_{message.pk}.txt'
+
         message = MessageSerializer(message, context={'request': request}).data
+
         return Response(message)
 
 

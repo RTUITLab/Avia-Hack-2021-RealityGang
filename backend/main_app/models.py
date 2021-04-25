@@ -7,6 +7,10 @@ class Message(models.Model):
     description = models.TextField('Описание', max_length=256)
     created_at = models.DateTimeField('Время публикации', default=datetime.now)
     status = models.CharField('Статус', default='Обработано', max_length=256)
+    answer = models.FileField('answer', null=True)
+    correct = models.FileField('correct', null=True)
+    incorrect = models.FileField('incorrect', null=True)
+    # json = models.CharField('JSON', default='', max_length=1000000)
 
     user = models.ForeignKey('User', on_delete=models.SET_NULL, verbose_name='Пользователь',
                              related_name='messages', null=True, blank=True)
