@@ -7,7 +7,7 @@
 1. Clone project with submodules
 
 ```
-git clone https://github.com/RTUITLab/Avia-Hack-2021-RealityGang avia
+git clone https://github.com/RTUITLab/Avia-Hack-2021-RealityX avia
 cd avia
 git submodule init
 git submodule update
