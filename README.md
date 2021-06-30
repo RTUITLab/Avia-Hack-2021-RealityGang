@@ -44,4 +44,4 @@ docker-compose up --build
 
 -->
 
-This project was made by RealityGang - team of RTU IT Lab.
+This project was made by RealityX (RealityGang - old name) - team of RTU IT Lab.
